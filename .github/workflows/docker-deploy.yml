@@ -30,34 +30,8 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Step 4: Determine changed folders
-      - name: Determine changed folders
-        id: changes
-        run: |
-          echo "CHANGED_FRONTEND=false" >> $GITHUB_ENV
-          echo "CHANGED_BACKEND=false" >> $GITHUB_ENV
-
-          # Fetch full history
-          git fetch origin develop --prune --unshallow || true
-
-          # Detect changed files
-          CHANGED_FILES=$(git diff --name-only origin/develop~1..origin/develop)
-          echo "Changed files detected:"
-          echo "$CHANGED_FILES"
-
-          if echo "$CHANGED_FILES" | grep -q '^frontend/'; then
-            echo "CHANGED_FRONTEND=true" >> $GITHUB_ENV
-            echo "Frontend changes detected."
-          fi
-
-          if echo "$CHANGED_FILES" | grep -q '^backend/'; then
-            echo "CHANGED_BACKEND=true" >> $GITHUB_ENV
-            echo "Backend changes detected."
-          fi
-
-      # Step 5: Build & push frontend
+      # Step 4: Build & push frontend (ALWAYS BUILD)
       - name: Build & Push Frontend
-        if: env.CHANGED_FRONTEND == 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
@@ -65,9 +39,8 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/digivoterz-frontend:latest
 
-      # Step 6: Build & push backend
+      # Step 5: Build & push backend (ALWAYS BUILD)
       - name: Build & Push Backend
-        if: env.CHANGED_BACKEND == 'true'
         uses: docker/build-push-action@v5
         with:
           context: ./backend
