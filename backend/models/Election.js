@@ -53,7 +53,7 @@ const ElectionSchema = new mongoose.Schema({
   voters: [VoterSchema],
   status: {
     type: String,
-    enum: ['pending', 'active', 'completed', 'closed'],
+    enum: ['pending','active', 'completed', 'closed'],
     default: 'pending',
   },
   votingUrl: {
