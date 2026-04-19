@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - develop
+      - develop2
   pull_request:
     branches:
       - develop
+      - develop2
 
 jobs:
   docker:
@@ -35,27 +37,25 @@ jobs:
           echo "CHANGED_FRONTEND=false" >> $GITHUB_ENV
           echo "CHANGED_BACKEND=false" >> $GITHUB_ENV
 
-          # Ensure full history to avoid shallow checkout issues
+          # Fetch full history
           git fetch origin develop --prune --unshallow || true
 
-          # Find changed files compared to the previous commit on develop
+          # Detect changed files
           CHANGED_FILES=$(git diff --name-only origin/develop~1..origin/develop)
           echo "Changed files detected:"
           echo "$CHANGED_FILES"
 
-          # Check if any frontend files changed
           if echo "$CHANGED_FILES" | grep -q '^frontend/'; then
             echo "CHANGED_FRONTEND=true" >> $GITHUB_ENV
             echo "Frontend changes detected."
           fi
 
-          # Check if any backend files changed
           if echo "$CHANGED_FILES" | grep -q '^backend/'; then
             echo "CHANGED_BACKEND=true" >> $GITHUB_ENV
             echo "Backend changes detected."
           fi
 
-      # Step 5: Build & push frontend if changed
+      # Step 5: Build & push frontend
       - name: Build & Push Frontend
         if: env.CHANGED_FRONTEND == 'true'
         uses: docker/build-push-action@v5
@@ -63,9 +63,9 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: kavin105/digivoterz-frontend:v2
+          tags: ${{ secrets.DOCKER_USERNAME }}/digivoterz-frontend:latest
 
-      # Step 6: Build & push backend if changed
+      # Step 6: Build & push backend
       - name: Build & Push Backend
         if: env.CHANGED_BACKEND == 'true'
         uses: docker/build-push-action@v5
@@ -73,4 +73,4 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: kavin105/digivoterz-backend:v2
+          tags: ${{ secrets.DOCKER_USERNAME }}/digivoterz-backend:latest
