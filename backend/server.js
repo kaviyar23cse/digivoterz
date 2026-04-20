@@ -17,7 +17,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/elections', require('./routes/elections'));
 app.use('/api/voting', require('./routes/voting'));
 
-// Base routes
+// Base routerss
 app.get('/', (req, res) => {
   res.json({ message: 'E-Voting System API running ✅' });
 });

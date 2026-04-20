@@ -39,7 +39,7 @@ jobs:
           git fetch origin develop --prune --unshallow || true
 
           # Find changed files compared to the previous commit on develop
-          CHANGED_FILES=$(git diff --name-only origin/develop~1..origin/develop)
+          CHANGED_FILES=$(git diff --name-only origin/develop2~1..origin/develop)
           echo "Changed files detected:"
           echo "$CHANGED_FILES"
 
