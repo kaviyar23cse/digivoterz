@@ -72,7 +72,7 @@ const ElectionSchema = new mongoose.Schema({
       validator: function(endDate) {
         return endDate > this.startDate;
       },
-      message: 'End date must be after start date'
+      message: 'End date must be after start date...check correctly'
     }
   },
   timezone: {
