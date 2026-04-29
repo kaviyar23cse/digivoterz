@@ -68,7 +68,7 @@ const Login = () => {
                         onChange={handleChange}
                         required
                         className="form-input-custom"
-                        placeholder="Enter your email"
+                        placeholder="Enter  email"
                       />
                     </Form.Group>
 
